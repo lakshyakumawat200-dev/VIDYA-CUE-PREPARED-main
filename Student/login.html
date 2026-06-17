@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Learning Portal Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      * { box-sizing:border-box; margin:0; padding:0; }
+
+      body {
+        font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        background:linear-gradient(135deg,#eff6ff,#ffffff,#ecfdf3);
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:1rem;
+      }
+
+      .page-root {
+        width:100%;
+        max-width:1100px;
+      }
+
+      .btn {
+        border-radius:9999px;
+        border:1px solid transparent;
+        padding:0.4rem 0.9rem;
+        font-size:0.85rem;
+        cursor:pointer;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:0.35rem;
+        background:#ffffff;
+        color:#111827;
+        transition:background 0.15s ease,box-shadow 0.15s ease,transform 0.1s ease;
+      }
+      .btn:hover {
+        background:#f9fafb;
+        box-shadow:0 8px 18px rgba(15,23,42,0.12);
+        transform:translateY(-1px);
+      }
+      .btn-ghost {
+        border-color:transparent;
+        background:transparent;
+      }
+      .btn-primary-blue {
+        background:#2563eb;
+        border-color:#2563eb;
+        color:#ffffff;
+      }
+      .btn-primary-green {
+        background:#16a34a;
+        border-color:#16a34a;
+        color:#ffffff;
+      }
+      .btn-sm {
+        padding:0.32rem 0.7rem;
+        font-size:0.78rem;
+      }
+
+      .layout-grid {
+        display:grid;
+        grid-template-columns:minmax(0,1fr);
+        gap:1.7rem;
+        align-items:center;
+      }
+      @media (min-width:1024px) {
+        .layout-grid {
+          grid-template-columns:1.1fr 1fr;
+        }
+      }
+
+      /* Left info */
+      .info-wrap {
+        display:none;
+      }
+      @media (min-width:1024px) {
+        .info-wrap { display:block; }
+      }
+      .chip {
+        display:inline-flex;
+        align-items:center;
+        gap:0.4rem;
+        padding:0.25rem 0.8rem;
+        border-radius:9999px;
+        background:#dbeafe;
+        color:#1d4ed8;
+        font-size:0.8rem;
+      }
+      .hero-title {
+        font-size:2.1rem;
+        font-weight:700;
+        letter-spacing:-0.02em;
+        margin-top:0.8rem;
+        margin-bottom:0.5rem;
+        color:#0f172a;
+      }
+      .hero-title span {
+        color:#2563eb;
+      }
+      .hero-text {
+        font-size:0.9rem;
+        color:#4b5563;
+        max-width:22rem;
+      }
+      .feature-card {
+        display:flex;
+        gap:0.7rem;
+        padding:0.9rem;
+        border-radius:0.9rem;
+        background:#ffffff;
+        border:1px solid #e5e7eb;
+        box-shadow:0 10px 18px rgba(15,23,42,0.08);
+        font-size:0.84rem;
+      }
+      .feature-icon {
+        width:2.3rem;
+        height:2.3rem;
+        border-radius:0.7rem;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-shrink:0;
+      }
+
+      /* Card */
+      .card {
+        background:#ffffff;
+        border-radius:1.3rem;
+        box-shadow:0 18px 40px rgba(15,23,42,0.18);
+        border:1px solid transparent;
+      }
+      .card-inner {
+        padding:2rem;
+      }
+      @media (max-width:480px) {
+        .card-inner { padding:1.4rem; }
+      }
+
+      /* Inputs */
+      .field {
+        display:flex;
+        flex-direction:column;
+        gap:0.25rem;
+        font-size:0.82rem;
+      }
+      label {
+        color:#4b5563;
+      }
+      .input-wrap {
+        position:relative;
+      }
+      .input {
+        width:100%;
+        border-radius:0.8rem;
+        border:1px solid #e5e7eb;
+        padding:0.6rem 0.75rem 0.6rem 2.4rem;
+        font-size:0.85rem;
+        background:#f9fafb;
+        color:#111827;
+      }
+      .input:focus {
+        outline:none;
+        border-color:#2563eb;
+        box-shadow:0 0 0 1px #2563eb33;
+      }
+      .input-icon-left {
+        position:absolute;
+        left:0.75rem;
+        top:50%;
+        transform:translateY(-50%);
+        font-size:1rem;
+        color:#9ca3af;
+      }
+      .input-icon-right {
+        position:absolute;
+        right:0.7rem;
+        top:50%;
+        transform:translateY(-50%);
+        font-size:0.9rem;
+        color:#9ca3af;
+        cursor:pointer;
+      }
+
+      .error-text {
+        font-size:0.78rem;
+        color:#b91c1c;
+      }
+      .error-border {
+        border-color:#ef4444 !important;
+      }
+
+      .login-header {
+        text-align:center;
+        margin-bottom:1.4rem;
+      }
+      .login-title {
+        font-size:1.25rem;
+        font-weight:600;
+        margin-bottom:0.25rem;
+        color:#111827;
+      }
+      .login-sub {
+        font-size:0.85rem;
+        color:#6b7280;
+      }
+      .logo-img {
+        width:4.5rem;
+        height:4.5rem;
+        border-radius:0.9rem;
+        background:#ffffff;
+        border:1px solid #e5e7eb;
+        box-shadow:0 8px 20px rgba(15,23,42,0.15);
+        object-fit:contain;
+        padding:0.3rem;
+        margin:0 auto 0.9rem;
+      }
+
+      /* Tabs */
+      .tabs-list {
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        background:#f3f4f6;
+        border-radius:9999px;
+        padding:0.18rem;
+        margin-bottom:1rem;
+      }
+      .tab-btn {
+        border-radius:9999px;
+        border:none;
+        background:transparent;
+        padding:0.35rem 0.6rem;
+        font-size:0.8rem;
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:0.3rem;
+        color:#4b5563;
+      }
+      .tab-btn-active-student {
+        background:#ffffff;
+        color:#2563eb;
+        box-shadow:0 6px 15px rgba(37,99,235,0.25);
+      }
+      .tab-btn-active-teacher {
+        background:#ffffff;
+        color:#16a34a;
+        box-shadow:0 6px 15px rgba(22,163,74,0.25);
+      }
+
+      .forgot-link {
+        font-size:0.8rem;
+        color:#2563eb;
+        cursor:pointer;
+      }
+      .forgot-link:hover { color:#1d4ed8; }
+
+      /* Demo credentials box */
+      .demo-box {
+        margin-top:1rem;
+        padding:0.8rem;
+        border-radius:0.8rem;
+        background:#eff6ff;
+        border:1px solid #bfdbfe;
+        font-size:0.78rem;
+        color:#1d4ed8;
+      }
+      .demo-row {
+        margin-bottom:0.25rem;
+      }
+
+      .helper-text {
+        margin-top:0.9rem;
+        text-align:center;
+        font-size:0.78rem;
+        color:#6b7280;
+      }
+
+      .back-btn {
+        margin-bottom:1rem;
+        color:#374151;
+      }
+      .back-btn span {
+        font-size:0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <div class="page-root">
+      <!-- Back button -->
+      <button class="btn btn-ghost back-btn" id="backBtn">
+        <span style="font-size:0.9rem;">←</span>
+        <span>Back to Institutes</span>
+      </button>
+
+      <div class="layout-grid">
+        <!-- Left info -->
+        <div class="info-wrap">
+          <div class="chip">
+            <span style="font-size:1rem;">🎓</span>
+            <span>Smart Education Platform</span>
+          </div>
+          <h1 class="hero-title">
+            Welcome to Your<br />
+            <span>Learning Portal</span>
+          </h1>
+          <p class="hero-text">
+            Access your courses, track attendance, view schedules, and manage your academic journey all in one place.
+          </p>
+
+          <div style="margin-top:1.7rem;display:flex;flex-direction:column;gap:0.8rem;max-width:22rem;">
+            <div class="feature-card">
+              <div class="feature-icon" style="background:#dbeafe;color:#2563eb;">
+                📖
+              </div>
+              <div>
+                <div style="font-weight:600;margin-bottom:0.15rem;color:#111827;">Smart Attendance</div>
+                <div style="color:#4b5563;font-size:0.8rem;">
+                  Track your attendance in real-time with detailed analytics.
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon" style="background:#dcfce7;color:#16a34a;">
+                🏅
+              </div>
+              <div>
+                <div style="font-weight:600;margin-bottom:0.15rem;color:#111827;">Performance Tracking</div>
+                <div style="color:#4b5563;font-size:0.8rem;">
+                  Monitor your academic progress and achievements.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right login card -->
+        <div class="card">
+          <div class="card-inner">
+            <div class="login-header">
+              <img
+                src="https://via.placeholder.com/80x80.png?text=Logo"
+                alt="College Logo"
+                class="logo-img"
+              />
+              <div class="login-title">Sign In</div>
+              <div class="login-sub" id="instituteText">
+                Example Institute of Technology
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-list" id="tabsList">
+              <button class="tab-btn tab-btn-active-student" data-role="student">
+                🎓
+                <span>Student</span>
+              </button>
+              <button class="tab-btn" data-role="teacher">
+                👤
+                <span>Teacher</span>
+              </button>
+            </div>
+
+            <!-- Forms share same fields; behavior changes with active role -->
+            <form id="loginForm" class="form" novalidate>
+              <div class="field" style="margin-bottom:0.9rem;">
+                <label for="email">Email Address</label>
+                <div class="input-wrap">
+                  <span class="input-icon-left">✉️</span>
+                  <input
+                    id="email"
+                    class="input"
+                    type="email"
+                    placeholder="your.email@college.edu"
+                    autocomplete="username"
+                  />
+                </div>
+                <p id="emailError" class="error-text" style="display:none;"></p>
+              </div>
+
+              <div class="field" style="margin-bottom:1.1rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.1rem;">
+                  <label for="password">Password</label>
+                  <button type="button" class="forgot-link" id="forgotBtn">
+                    Forgot password?
+                  </button>
+                </div>
+                <div class="input-wrap">
+                  <span class="input-icon-left">🔒</span>
+                  <input
+                    id="password"
+                    class="input"
+                    type="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                  />
+                  <span class="input-icon-right" id="togglePwd">👁</span>
+                </div>
+                <p id="passwordError" class="error-text" style="display:none;"></p>
+              </div>
+
+              <button
+                type="submit"
+                id="submitBtn"
+                class="btn btn-primary-blue"
+                style="width:100%;height:2.6rem;margin-bottom:0.4rem;"
+              >
+                Sign In as Student
+              </button>
+            </form>
+
+            <!-- Demo credentials -->
+            <div class="demo-box">
+              <p class="demo-row"><strong>Demo Credentials:</strong></p>
+              <p class="demo-row">
+                Student: himanshu.saini@gecbikaner.ac.in / student123
+              </p>
+              <p class="demo-row">
+                Teacher: prof.sharma@gecbikaner.ac.in / teacher123
+              </p>
+              <button
+                type="button"
+                id="demoBtn"
+                class="btn btn-sm"
+                style="margin-top:0.3rem;border-color:#bfdbfe;color:#1d4ed8;"
+              >
+                Use Demo Credentials
+              </button>
+            </div>
+
+            <div class="helper-text">
+              Need help? Contact your institution's IT support.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Mock "props"
+      const instituteName = "Government Engineering College, Bikaner";
+      document.getElementById("instituteText").textContent = instituteName;
+
+      // Mock users
+      const mockUsers = {
+        student: {
+          email: "himanshu.saini@gecbikaner.ac.in",
+          password: "student123",
+          name: "Himanshu Saini",
+        },
+        teacher: {
+          email: "prof.sharma@gecbikaner.ac.in",
+          password: "teacher123",
+          name: "Dr. Rajesh Sharma",
+        },
+      };
+
+      let activeRole = "student";
+      let isLoading = false;
+
+      const tabsList = document.getElementById("tabsList");
+      const submitBtn = document.getElementById("submitBtn");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+      const togglePwd = document.getElementById("togglePwd");
+      const demoBtn = document.getElementById("demoBtn");
+      const loginForm = document.getElementById("loginForm");
+
+      function updateSubmitLabel() {
+        if (activeRole === "student") {
+          submitBtn.textContent = isLoading ? "Signing In..." : "Sign In as Student";
+          submitBtn.classList.remove("btn-primary-green");
+          submitBtn.classList.add("btn-primary-blue");
+        } else {
+          submitBtn.textContent = isLoading ? "Signing In..." : "Sign In as Teacher";
+          submitBtn.classList.remove("btn-primary-blue");
+          submitBtn.classList.add("btn-primary-green");
+        }
+      }
+
+      function clearErrors() {
+        emailError.style.display = "none";
+        passwordError.style.display = "none";
+        emailInput.classList.remove("error-border");
+        passwordInput.classList.remove("error-border");
+      }
+
+      function validateForm() {
+        clearErrors();
+        let ok = true;
+        const emailVal = emailInput.value.trim();
+        const pwdVal = passwordInput.value;
+
+        if (!emailVal) {
+          emailError.textContent = "Email is required";
+          emailError.style.display = "block";
+          emailInput.classList.add("error-border");
+          ok = false;
+        } else if (!/^\S+@\S+\.\S+$/.test(emailVal)) {
+          emailError.textContent = "Please enter a valid email address";
+          emailError.style.display = "block";
+          emailInput.classList.add("error-border");
+          ok = false;
+        }
+
+        if (!pwdVal) {
+          passwordError.textContent = "Password is required";
+          passwordError.style.display = "block";
+          passwordInput.classList.add("error-border");
+          ok = false;
+        } else if (pwdVal.length < 6) {
+          passwordError.textContent = "Password must be at least 6 characters";
+          passwordError.style.display = "block";
+          passwordInput.classList.add("error-border");
+          ok = false;
+        }
+
+        return ok;
+      }
+
+      // Tab switching
+      tabsList.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const role = btn.dataset.role;
+          if (!role || role === activeRole) return;
+          activeRole = role;
+          // reset fields
+          emailInput.value = "";
+          passwordInput.value = "";
+          clearErrors();
+
+          tabsList.querySelectorAll(".tab-btn").forEach((b) => {
+            b.classList.remove("tab-btn-active-student","tab-btn-active-teacher");
+          });
+          if (activeRole === "student") {
+            btn.classList.add("tab-btn-active-student");
+            emailInput.placeholder = "your.email@college.edu";
+          } else {
+            btn.classList.add("tab-btn-active-teacher");
+            emailInput.placeholder = "professor.email@college.edu";
+          }
+          updateSubmitLabel();
+        });
+      });
+
+      // Show/hide password
+      let pwdVisible = false;
+      togglePwd.addEventListener("click", () => {
+        pwdVisible = !pwdVisible;
+        passwordInput.type = pwdVisible ? "text" : "password";
+        togglePwd.textContent = pwdVisible ? "🙈" : "👁";
+      });
+
+      // Demo credentials
+      demoBtn.addEventListener("click", () => {
+        const user = mockUsers[activeRole];
+        emailInput.value = user.email;
+        passwordInput.value = user.password;
+        clearErrors();
+      });
+
+      // Form submit
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (isLoading) return;
+
+        if (!validateForm()) return;
+
+        isLoading = true;
+        updateSubmitLabel();
+
+        setTimeout(() => {
+          const user = mockUsers[activeRole];
+          if (
+            emailInput.value.trim() === user.email &&
+            passwordInput.value === user.password
+          ) {
+            // Store user in localStorage for header to pick up and redirect
+            localStorage.setItem('vc_user', JSON.stringify({ name: user.name, role: activeRole }));
+            // Redirect to dashboard
+            location.href = 'studentdashboard.html';
+          } else {
+            emailError.textContent =
+              "Invalid credentials. Please check your email and password.";
+            emailError.style.display = "block";
+            passwordError.textContent = " ";
+            passwordError.style.display = "block";
+            emailInput.classList.add("error-border");
+            passwordInput.classList.add("error-border");
+          }
+          isLoading = false;
+          updateSubmitLabel();
+        }, 900);
+      });
+
+      // Simple helpers
+      document.getElementById("backBtn").addEventListener("click", () => {
+        alert("Back to institutes list");
+      });
+
+      document.getElementById("forgotBtn").addEventListener("click", () => {
+        alert("Please contact your institution's IT support to reset your password.");
+      });
+
+      // Clear specific errors on input
+      emailInput.addEventListener("input", () => {
+        if (emailError.style.display === "block") {
+          emailError.style.display = "none";
+          emailInput.classList.remove("error-border");
+        }
+      });
+      passwordInput.addEventListener("input", () => {
+        if (passwordError.style.display === "block") {
+          passwordError.style.display = "none";
+          passwordInput.classList.remove("error-border");
+        }
+      });
+
+      updateSubmitLabel();
+    </script>
+    <script src="include-html.js"></script>
+  </body>
+</html>

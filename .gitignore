@@ -1,0 +1,13 @@
+node_modules/
+.DS_Store
+*.log
+.env
+.vscode/settings.json
+*.swp
+*.swo
+~$*.xlsx
+.idea/
+dist/
+build/
+.cache/
+*.tmp
